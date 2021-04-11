@@ -1,0 +1,44 @@
+#!/bin/bash
+
+origfilepath=~/Downloads
+destfilepath=~/Faculdade
+periodo=$1
+nFiles=0
+shift
+
+if [ $# -ge 2 ]
+then
+	mkdir -p $destfilepath
+	mkdir -p $destfilepath/$periodo
+
+	for arg in "$@"
+	do
+		upper=${arg^^}
+		lower=${arg,,}
+		fupper=${arg^}
+
+		mkdir -p $destfilepath/$periodo/$lower
+
+		if [ -f $origfilepath/*$arg* ]
+		then
+			mv $origfilepath/*$arg* $destfilepath/$periodo/$lower
+		fi
+		if [ -f $origfilepath/*$upper* ]
+		then
+			mv $origfilepath/*$upper* $destfilepath/$periodo/$lower
+		fi
+		if [ -f $origfilepath/*$lower* ]
+		then
+			mv $origfilepath/*$lower* $destfilepath/$periodo/$lower
+		fi
+		if [ -f $origfilepath/*$fupper* ]
+		then
+			mv $origfilepath/*$fupper* $destfilepath/$periodo/$lower
+		fi
+		aux=$(ls $destfilepath/$periodo/$lower | wc -l)
+		nFiles=$(($nFiles + $aux)) 
+	done
+	echo "$nFiles arquivos foram movidos com sucesso!"
+else
+	echo "Usar: ./faculfiles [Número do período atual] [Matéria1] [Matéria2] [...]"
+fi
